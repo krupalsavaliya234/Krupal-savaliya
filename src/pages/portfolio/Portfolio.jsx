@@ -11,7 +11,7 @@ import Footer from "../../components/Footer";
  * @component
  */
 
-const Portfolio = () => {
+const Portfolio = ({show}) => {
   // Get the current location using React Router's useLocation hook
   const location = useLocation();
 
@@ -33,7 +33,8 @@ const Portfolio = () => {
           <ProjectList />
         </div>
       </main>
-      <Footer />
+      {show  ? "" :<Footer /> }
+      
     </>
   );
 };

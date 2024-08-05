@@ -1,12 +1,12 @@
 [
   {
     "title": "AgroPlus",
-    "description": "Plan Safe Routes",
+    "description": "Agriculture Innvation",
     "image": "/projectImages/p02.png",
     "image2": "/projectImages/p03.png",
     "image3": "/projectImages/routes3.png",
     "body": "Implemented features for buying and selling products, market price tracking, plant disease detection with solutions, group chat, View government policies . Integrated a chat-group to answer farmer queries in English and Gujarati, and provided live weather updates to users. Enhanced user experience with intuitive UI design, efficient data handling.",
-    "technologies": ["React", "NodeJs", "ExpressJs", "Mongoodb" ],
+    "technologies": ["React", "NodeJs", "ExpressJs", "Mongodb" ],
     "github": "https://github.com/krupalsavaliya234/Agro-Plus",
     "deployed": "https://norrinradd8.github.io/bike_buddy/",
     "bgcolor": "var(--hl2-color)",
@@ -14,13 +14,13 @@
   },
   {
     "title": "CampusBite",
-    "description": "Weather Forecast",
+    "description": "Canteen Management System ",
     "image": "/projectImages/weather.png",
     "image2": "/projectImages/storm.jpeg",
     "image3": "/projectImages/weather3.png",
-    "technologies": ["JavaScript", "jQuery", "HTML", "CSS"],
-    "body": "This mobile web application leverages the OpenWeatherMap API to deliver real-time weather data for any location. Users can view current conditions including temperature, humidity, and wind speed, as well as a 5-day forecast.\nThe interface automatically adapts between light and dark modes based on the time of day at the given location. Recent searches are stored to enable quick access to frequently checked cities. Geolocation functionality determines the user's position for quick access to local weather.\nBy combining a modern, responsive design with robust weather data pulled from OpenWeatherMap's API, this application aims to provide an intuitive experience for staying up-to-date on the latest weather conditions. The project demonstrates proficiency in integrating third-party APIs, building adaptive interfaces, and crafting performant mobile web applications.",
-    "github": "https://github.com/mdyeates/weather-app",
+    "technologies": ["EJs", "NodeJs", "ExpressJs", "Mongodb", "CSS"],
+    "body": "Designed and implemented a user-friendly Canteen Management System enabling restaurant managers to add daily menus, receive and process customer orders, manage order completion, and maintain order history for enhanced service efficiency.Integrated the system using Express.js, Node.js, MongoDB, and EJS for efficient backend and dynamic frontend rendering. Ensured data integrity and optimized queries in MongoDB to handle large volumes of order data effectively",
+    "github": "https://github.com/krupalsavaliya234/CampusBite",
     "deployed": "https://mdyeates.github.io/weather-app/",
     "bgcolor": "var(--hl-color)",
     "id": "2"

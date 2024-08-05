@@ -94,39 +94,9 @@ const Form = () => {
     setSending(true);
 
     const data = JSON.stringify(formData);
-
+    console.log(data)
     // Send form data to an API endpoint
-    fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // Form submission success
-        setSending(false);
-        setSuccess(true);
-        setFailed(false);
-        setFormData({
-          ...formData,
-          name: "",
-          email: "",
-          subject: "",
-          message: "",
-        });
-        setTimeout(() => {
-          setSuccess(false);
-        }, 3000);
-      })
-      .catch((err) => {
-        // Form submission failed
-        console.log(err);
-        setSending(false);
-        setFailed(true);
-      });
+   
   };
 
   // Determine button text based on status
