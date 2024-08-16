@@ -14,7 +14,7 @@ const Loader = ({ setShowLoader }) => {
     // Automatically hide the loader after a delay
     setTimeout(() => {
       setShowLoader(false);
-    }, 2800);
+    },0);
   }, [setShowLoader]);
 
   // Animation variants for the SVG icons

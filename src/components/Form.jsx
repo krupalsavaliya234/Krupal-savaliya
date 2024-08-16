@@ -4,7 +4,11 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import validator from "email-validator";
 import Button from "./Button";
+import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
+// import { ToastContainer, toast } from 'react-toastify';
 /**
+ * 
  * Contact Form Component
  * ----------------------
  * This component represents a fully functional contact form.
@@ -52,6 +56,7 @@ const Form = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    
   };
 
   // Handle input focus to reset error state
@@ -94,7 +99,75 @@ const Form = () => {
     setSending(true);
 
     const data = JSON.stringify(formData);
-    console.log(data)
+    axios.post(`https://myportfolio-backend-phzl.onrender.com//send-mail`, {
+      data
+    })
+    .then(function (response) {
+      // console.log(response.status);
+      if(response.status==200)
+      {
+        setSending(false)
+        setSuccess(true);
+        toast('Thank you for connecting 😇 , Please check you E-mail 📩', {
+          duration: 4000,
+          position: 'top-center',
+        
+          // Styling
+          style: {},
+          className: '',
+        
+          // Custom Icon
+          icon: '👏',
+        
+          // Change colors of success/error/loading icon
+          iconTheme: {
+            primary: '#000',
+            secondary: '#fff',
+          },
+        
+          // Aria
+          ariaProps: {
+            role: 'status',
+            'aria-live': 'polite',
+          },
+        });
+        // toast.success('🦄 Wow so easy!', {
+        //   position: "top-right",
+        //   autoClose: 5000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        // });
+      }
+    })
+    .catch(function (error) {
+      toast('Please Try again 2 Minute latter 🤝', {
+        duration: 4000,
+        position: 'top-center',
+      
+        // Styling
+        style: {},
+        className: '',
+      
+        // Custom Icon
+       
+      
+        // Change colors of success/error/loading icon
+        iconTheme: {
+          primary: '#000',
+          secondary: '#fff',
+        },
+      
+        // Aria
+        ariaProps: {
+          role: 'status',
+          'aria-live': 'polite',
+        },
+      });
+    });
+    // console.log(data)
  
     
     // Send form data to an API endpoint
@@ -104,6 +177,7 @@ const Form = () => {
   // Determine button text based on status
   const handleButtonText = () => {
     if (sending) {
+      
       return "Please wait...";
     } else if (success) {
       return "Message Sent";
@@ -133,12 +207,15 @@ const Form = () => {
           onFocus={() => {
             handleInputFocus(setNameError);
           }}
+          onClick={()=>{
+            handleInputFocus(setNameError);
+          }}
           onChange={handleChange}
           value={formData.name}
           id="contactName"
           name="name"
           placeholder={`${nameError ? "Please enter your name" : "Name"}`}
-          autoComplete="name"
+          // autoComplete="name"
         />
       </div>
       <div className="col-12 col-md-6 formGroup" style={{ display: "inline-block" }}>
@@ -191,7 +268,7 @@ const Form = () => {
         <Button
           name={handleButtonText()}
           disabled={nameError || messageError || emailError || subjectError || sending || success}
-        />
+        /><Toaster/>
       </motion.div>
     </motion.form>
   );

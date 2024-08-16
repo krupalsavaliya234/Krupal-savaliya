@@ -87,9 +87,9 @@ const ProjectDetails = () => {
                 <a href={project.github} target="blank">
                   <Button name="View Code" />
                 </a>
-                <a href={project.deployed} target="blank">
+                {/* <a href={project.deployed} target="blank">
                   <Button name="View Site" />
-                </a>
+                </a> */}
                 <Link to="/portfolio" target="blank">
                   <Button name="Go Back" color="var(--hl2-color)" />
                 </Link>
