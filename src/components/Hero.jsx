@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Typewriter from "typewriter-effect";
-import landingImage from "../images/main image.jpg";
+import landingImage from "../images/home.png";
 import SocialIcons from "./SocialIcons";
 
 /**

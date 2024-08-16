@@ -1,9 +1,9 @@
+// const nodemailer = require("nodemailer");
 import { useInView } from "react-intersection-observer";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import validator from "email-validator";
 import Button from "./Button";
-
 /**
  * Contact Form Component
  * ----------------------
@@ -95,6 +95,8 @@ const Form = () => {
 
     const data = JSON.stringify(formData);
     console.log(data)
+ 
+    
     // Send form data to an API endpoint
    
   };

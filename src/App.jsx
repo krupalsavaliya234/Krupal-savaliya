@@ -26,7 +26,7 @@ function App() {
   // State to manage loader visibility
   const [showLoader, setShowLoader] = useState(true);
 
-  const [originalTitle, setOriginalTitle] = useState();
+  const [originalTitle, setOriginalTitle] = useState("KRUPAL SAVALIYA | WEB DEVELOPER");
 
   useEffect(() => {
     // Hide loader when initial route is loaded
