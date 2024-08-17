@@ -99,7 +99,7 @@ const Form = () => {
     setSending(true);
 
     const data = JSON.stringify(formData);
-    axios.post(`https://myportfolio-backend-phzl.onrender.com//send-mail`, {
+    axios.post(`https://myportfolio-backend-phzl.onrender.com/send-mail`, {
       data
     })
     .then(function (response) {
