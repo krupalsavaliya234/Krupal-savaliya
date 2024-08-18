@@ -1,4 +1,3 @@
-// const nodemailer = require("nodemailer");
 import { useInView } from "react-intersection-observer";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -6,25 +5,6 @@ import validator from "email-validator";
 import Button from "./Button";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
-// import { ToastContainer, toast } from 'react-toastify';
-/**
- * 
- * Contact Form Component
- * ----------------------
- * This component represents a fully functional contact form.
- *
- * @component
- *
- * Form Submission API Key:
- * ------------------------
- * To enable form submissions, obtain your API Key from https://web3forms.com/
- *
- * Follow these steps:
- * 1. Create a .env file in the root directory.
- * 2. Copy and paste the following line into your .env file, replacing with your API key:
- *    REACT_APP_ACCESS_KEY="Your API Key"
- *
- */
 
 const Form = () => {
   const [ref, inView] = useInView({
@@ -32,7 +12,6 @@ const Form = () => {
     triggerOnce: true,
   });
 
-  // State for handling form submission statuses and errors
   const [success, setSuccess] = useState(false);
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -41,7 +20,6 @@ const Form = () => {
   const [subjectError, setSubjectError] = useState(false);
   const [messageError, setMessageError] = useState(false);
 
-  // State for form data
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -50,142 +28,72 @@ const Form = () => {
     access_key: process.env.REACT_APP_ACCESS_KEY,
   });
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-    
   };
 
-  // Handle input focus to reset error state
   const handleInputFocus = (errorStateSetter) => {
     errorStateSetter(false);
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate and set error states
-    formData.name === "" ? setNameError(true) : setNameError(false);
-    formData.email === "" || !validator.validate(formData.email) ? setEmailError(true) : setEmailError(false);
-    formData.subject === "" ? setSubjectError(true) : setSubjectError(false);
-    formData.message === "" ? setMessageError(true) : setMessageError(false);
+    // Validate fields
+    setNameError(formData.name === "");
+    setEmailError(formData.email === "" || !validator.validate(formData.email));
+    setSubjectError(formData.subject === "");
+    setMessageError(formData.message === "");
 
-    // Handle invalid form
-    if (
-      nameError ||
-      emailError ||
-      messageError ||
-      subjectError ||
-      !validator.validate(formData.email) ||
-      formData.name === "" ||
-      formData.email === "" ||
-      formData.subject === "" ||
-      formData.message === ""
-    ) {
-      setFormData({
-        ...formData,
-        email: "",
-      });
+    if (nameError || emailError || subjectError || messageError) {
       setSending(false);
       setFailed(true);
       return;
     }
 
-    // Form submission in progress
     setSending(true);
+    toast('Thank you for connecting 😇, Please wait...', {
+      duration: 4000,
+      position: 'top-center',
+      icon: '👏',
+      iconTheme: { primary: '#000', secondary: '#fff' },
+      ariaProps: { role: 'status', 'aria-live': 'polite' },
+    });
 
-    const data = JSON.stringify(formData);
-    axios.post(`https://myportfolio-backend-phzl.onrender.com/send-mail`, {
-      data
-    })
-    .then(function (response) {
-      // console.log(response.status);
-      if(response.status==200)
-      {
-        setSending(false)
-        setSuccess(true);
-        toast('Thank you for connecting 😇 , Please check you E-mail 📩', {
+    axios.post('https://myportfolio-backend-phzl.onrender.com/send-mail', formData)
+      .then(response => {
+        if (response.status === 200) {
+          setSending(false);
+          setSuccess(true);
+          toast('Thank you for connecting 😇, Please check your email 📩', {
+            duration: 4000,
+            position: 'top-center',
+            icon: '👏',
+            iconTheme: { primary: '#000', secondary: '#fff' },
+            ariaProps: { role: 'status', 'aria-live': 'polite' },
+          });
+        }
+      })
+      .catch(error => {
+        toast('Please try again later 🤝', {
           duration: 4000,
           position: 'top-center',
-        
-          // Styling
-          style: {},
-          className: '',
-        
-          // Custom Icon
-          icon: '👏',
-        
-          // Change colors of success/error/loading icon
-          iconTheme: {
-            primary: '#000',
-            secondary: '#fff',
-          },
-        
-          // Aria
-          ariaProps: {
-            role: 'status',
-            'aria-live': 'polite',
-          },
+          icon: '⚠️',
+          iconTheme: { primary: '#000', secondary: '#fff' },
+          ariaProps: { role: 'status', 'aria-live': 'polite' },
         });
-        // toast.success('🦄 Wow so easy!', {
-        //   position: "top-right",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        // });
-      }
-    })
-    .catch(function (error) {
-      toast('Please Try again 2 Minute latter 🤝', {
-        duration: 4000,
-        position: 'top-center',
-      
-        // Styling
-        style: {},
-        className: '',
-      
-        // Custom Icon
-       
-      
-        // Change colors of success/error/loading icon
-        iconTheme: {
-          primary: '#000',
-          secondary: '#fff',
-        },
-      
-        // Aria
-        ariaProps: {
-          role: 'status',
-          'aria-live': 'polite',
-        },
+        setSending(false);
       });
-    });
-    // console.log(data)
- 
-    
-    // Send form data to an API endpoint
-   
   };
 
-  // Determine button text based on status
   const handleButtonText = () => {
-    if (sending) {
-      
-      return "Please wait...";
-    } else if (success) {
-      return "Message Sent";
-    } else if (failed || nameError || messageError || emailError || subjectError) {
-      return "Try again";
-    } else {
-      return "Send Message";
-    }
+    if (sending) return "Please wait...";
+    if (success) return "Message Sent";
+    if (failed || nameError || emailError || subjectError || messageError) return "Try again";
+    return "Send Message";
   };
 
   return (
@@ -199,32 +107,23 @@ const Form = () => {
       onSubmit={handleSubmit}
     >
       <h4 className="contentTitle">Send a Message</h4>
-      {/* Input fields */}
       <div className="col-12 col-md-6 formGroup" style={{ display: "inline-block" }}>
         <input
           type="text"
           className={`formControl ${nameError ? "formError" : ""}`}
-          onFocus={() => {
-            handleInputFocus(setNameError);
-          }}
-          onClick={()=>{
-            handleInputFocus(setNameError);
-          }}
+          onFocus={() => handleInputFocus(setNameError)}
           onChange={handleChange}
           value={formData.name}
           id="contactName"
           name="name"
           placeholder={`${nameError ? "Please enter your name" : "Name"}`}
-          // autoComplete="name"
         />
       </div>
       <div className="col-12 col-md-6 formGroup" style={{ display: "inline-block" }}>
         <input
           type="text"
           className={`formControl ${emailError ? "formError" : ""}`}
-          onFocus={() => {
-            handleInputFocus(setEmailError);
-          }}
+          onFocus={() => handleInputFocus(setEmailError)}
           onChange={handleChange}
           value={formData.email}
           id="contactEmail"
@@ -237,9 +136,7 @@ const Form = () => {
         <input
           type="text"
           className={`formControl ${subjectError ? "formError" : ""}`}
-          onFocus={() => {
-            handleInputFocus(setSubjectError);
-          }}
+          onFocus={() => handleInputFocus(setSubjectError)}
           onChange={handleChange}
           value={formData.subject}
           id="contactSubject"
@@ -251,9 +148,7 @@ const Form = () => {
       <div className="col-12 formGroup">
         <textarea
           className={`formControl ${messageError ? "formError" : ""}`}
-          onFocus={() => {
-            handleInputFocus(setMessageError);
-          }}
+          onFocus={() => handleInputFocus(setMessageError)}
           onChange={handleChange}
           value={formData.message}
           name="message"
@@ -263,12 +158,12 @@ const Form = () => {
           autoComplete="off"
         ></textarea>
       </div>
-      {/* Form submission button */}
       <motion.div className="col-12 formGroup formSubmit">
         <Button
           name={handleButtonText()}
-          disabled={nameError || messageError || emailError || subjectError || sending || success}
-        /><Toaster/>
+          disabled={nameError || emailError || subjectError || messageError || sending || success}
+        />
+        <Toaster />
       </motion.div>
     </motion.form>
   );
