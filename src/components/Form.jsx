@@ -1,4 +1,3 @@
-// const nodemailer = require("nodemailer");
 import { useInView } from "react-intersection-observer";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -6,7 +5,7 @@ import validator from "email-validator";
 import Button from "./Button";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
-// import { ToastContainer, toast } from 'react-toastify';
+
 /**
  * 
  * Contact Form Component
@@ -56,7 +55,6 @@ const Form = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    
   };
 
   // Handle input focus to reset error state
@@ -69,115 +67,56 @@ const Form = () => {
     e.preventDefault();
 
     // Validate and set error states
-    formData.name === "" ? setNameError(true) : setNameError(false);
-    formData.email === "" || !validator.validate(formData.email) ? setEmailError(true) : setEmailError(false);
-    formData.subject === "" ? setSubjectError(true) : setSubjectError(false);
-    formData.message === "" ? setMessageError(true) : setMessageError(false);
+    setNameError(formData.name === "");
+    setEmailError(formData.email === "" || !validator.validate(formData.email));
+    setSubjectError(formData.subject === "");
+    setMessageError(formData.message === "");
 
     // Handle invalid form
-    if (
-      nameError ||
-      emailError ||
-      messageError ||
-      subjectError ||
-      !validator.validate(formData.email) ||
-      formData.name === "" ||
-      formData.email === "" ||
-      formData.subject === "" ||
-      formData.message === ""
-    ) {
-      setFormData({
-        ...formData,
-        email: "",
-      });
+    if (nameError || emailError || subjectError || messageError) {
       setSending(false);
       setFailed(true);
+      toast.error('Please fill in all required fields correctly.');
       return;
     }
 
     // Form submission in progress
     setSending(true);
+    toast.loading('Submitting your message...', {
+      duration: 4000,
+      position: 'top-center',
+      style: {},
+      className: '',
+      icon: '⏳',
+      iconTheme: {
+        primary: '#000',
+        secondary: '#fff',
+      },
+      ariaProps: {
+        role: 'status',
+        'aria-live': 'polite',
+      },
+    });
 
     const data = JSON.stringify(formData);
-    axios.post(`https://myportfolio-backend-phzl.onrender.com//send-mail`, {
-      data
-    })
-    .then(function (response) {
-      // console.log(response.status);
-      if(response.status==200)
-      {
-        setSending(false)
-        setSuccess(true);
-        toast('Thank you for connecting 😇 , Please check you E-mail 📩', {
-          duration: 4000,
-          position: 'top-center',
-        
-          // Styling
-          style: {},
-          className: '',
-        
-          // Custom Icon
-          icon: '👏',
-        
-          // Change colors of success/error/loading icon
-          iconTheme: {
-            primary: '#000',
-            secondary: '#fff',
-          },
-        
-          // Aria
-          ariaProps: {
-            role: 'status',
-            'aria-live': 'polite',
-          },
-        });
-        // toast.success('🦄 Wow so easy!', {
-        //   position: "top-right",
-        //   autoClose: 5000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        // });
-      }
-    })
-    .catch(function (error) {
-      toast('Please Try again 2 Minute latter 🤝', {
-        duration: 4000,
-        position: 'top-center',
-      
-        // Styling
-        style: {},
-        className: '',
-      
-        // Custom Icon
-       
-      
-        // Change colors of success/error/loading icon
-        iconTheme: {
-          primary: '#000',
-          secondary: '#fff',
-        },
-      
-        // Aria
-        ariaProps: {
-          role: 'status',
-          'aria-live': 'polite',
-        },
+    axios.post('https://myportfolio-backend-phzl.onrender.com/send-mail', { data })
+      .then((response) => {
+        if (response.status === 200) {
+          setSending(false);
+          setSuccess(true);
+          toast.dismiss(); // Dismiss the loading toast
+          toast.success('Thank you for connecting! Please check your email.');
+        }
+      })
+      .catch((error) => {
+        toast.dismiss(); // Dismiss the loading toast
+        toast.error('Something went wrong. Please try again later.');
       });
-    });
-    // console.log(data)
- 
-    
-    // Send form data to an API endpoint
-   
   };
 
   // Determine button text based on status
   const handleButtonText = () => {
     if (sending) {
-      
       return "Please wait...";
     } else if (success) {
       return "Message Sent";
@@ -204,32 +143,25 @@ const Form = () => {
         <input
           type="text"
           className={`formControl ${nameError ? "formError" : ""}`}
-          onFocus={() => {
-            handleInputFocus(setNameError);
-          }}
-          onClick={()=>{
-            handleInputFocus(setNameError);
-          }}
+          onFocus={() => handleInputFocus(setNameError)}
+          onClick={() => handleInputFocus(setNameError)}
           onChange={handleChange}
           value={formData.name}
           id="contactName"
           name="name"
-          placeholder={`${nameError ? "Please enter your name" : "Name"}`}
-          // autoComplete="name"
+          placeholder={nameError ? "Please enter your name" : "Name"}
         />
       </div>
       <div className="col-12 col-md-6 formGroup" style={{ display: "inline-block" }}>
         <input
           type="text"
           className={`formControl ${emailError ? "formError" : ""}`}
-          onFocus={() => {
-            handleInputFocus(setEmailError);
-          }}
+          onFocus={() => handleInputFocus(setEmailError)}
           onChange={handleChange}
           value={formData.email}
           id="contactEmail"
           name="email"
-          placeholder={`${emailError ? "Please enter a valid email" : "Email"}`}
+          placeholder={emailError ? "Please enter a valid email" : "Email"}
           autoComplete="email"
         />
       </div>
@@ -237,29 +169,25 @@ const Form = () => {
         <input
           type="text"
           className={`formControl ${subjectError ? "formError" : ""}`}
-          onFocus={() => {
-            handleInputFocus(setSubjectError);
-          }}
+          onFocus={() => handleInputFocus(setSubjectError)}
           onChange={handleChange}
           value={formData.subject}
           id="contactSubject"
           name="subject"
-          placeholder={`${subjectError ? "Please enter a subject" : "Subject"}`}
+          placeholder={subjectError ? "Please enter a subject" : "Subject"}
           autoComplete="off"
         />
       </div>
       <div className="col-12 formGroup">
         <textarea
           className={`formControl ${messageError ? "formError" : ""}`}
-          onFocus={() => {
-            handleInputFocus(setMessageError);
-          }}
+          onFocus={() => handleInputFocus(setMessageError)}
           onChange={handleChange}
           value={formData.message}
           name="message"
           id="contactMessage"
           rows="5"
-          placeholder={`${messageError ? "Please enter a message" : "Message"}`}
+          placeholder={messageError ? "Please enter a message" : "Message"}
           autoComplete="off"
         ></textarea>
       </div>
@@ -268,7 +196,8 @@ const Form = () => {
         <Button
           name={handleButtonText()}
           disabled={nameError || messageError || emailError || subjectError || sending || success}
-        /><Toaster/>
+        />
+        <Toaster />
       </motion.div>
     </motion.form>
   );
