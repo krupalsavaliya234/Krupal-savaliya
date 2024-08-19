@@ -5,6 +5,7 @@ import validator from "email-validator";
 import Button from "./Button";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
+import { RotatingLines } from 'react-loader-spinner';
 
 /**
  * 
@@ -115,17 +116,18 @@ const Form = () => {
   };
 
   // Determine button text based on status
-  const handleButtonText = () => {
-    if (sending) {
-      return "Please wait...";
-    } else if (success) {
-      return "Message Sent";
-    } else if (failed || nameError || messageError || emailError || subjectError) {
-      return "Try again";
-    } else {
-      return "Send Message";
-    }
-  };
+ const handleButtonText = () => {
+  if (sending) {
+    return <RotatingLines strokeColor="grey" strokeWidth="5" animationDuration="0.75" width="24" visible={true} />;
+  } else if (success) {
+    return "Message Sent";
+  } else if (failed || nameError || messageError || emailError || subjectError) {
+    return "Try again";
+  } else {
+    return "Send Message";
+  }
+};
+
 
   return (
     <motion.form
@@ -193,10 +195,11 @@ const Form = () => {
       </div>
       {/* Form submission button */}
       <motion.div className="col-12 formGroup formSubmit">
-        <Button
-          name={handleButtonText()}
-          disabled={nameError || messageError || emailError || subjectError || sending || success}
-        />
+       <Button
+  name={handleButtonText()}
+  disabled={nameError || messageError || emailError || subjectError || sending || success}
+/>
+
         <Toaster />
       </motion.div>
     </motion.form>
