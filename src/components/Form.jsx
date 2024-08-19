@@ -5,7 +5,6 @@ import validator from "email-validator";
 import Button from "./Button";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
-import { RotatingLines } from 'react-loader-spinner'; // Import the loader
 
 const Form = () => {
   const [ref, inView] = useInView({
@@ -13,6 +12,7 @@ const Form = () => {
     triggerOnce: true,
   });
 
+  // State for handling form submission statuses and errors
   const [success, setSuccess] = useState(false);
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -21,6 +21,7 @@ const Form = () => {
   const [subjectError, setSubjectError] = useState(false);
   const [messageError, setMessageError] = useState(false);
 
+  // State for form data
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -29,6 +30,7 @@ const Form = () => {
     access_key: process.env.REACT_APP_ACCESS_KEY,
   });
 
+  // Handle input change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -36,18 +38,22 @@ const Form = () => {
     });
   };
 
+  // Handle input focus to reset error state
   const handleInputFocus = (errorStateSetter) => {
     errorStateSetter(false);
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Validate fields
     setNameError(formData.name === "");
     setEmailError(formData.email === "" || !validator.validate(formData.email));
     setSubjectError(formData.subject === "");
     setMessageError(formData.message === "");
 
+    // Handle invalid form
     if (nameError || emailError || subjectError || messageError) {
       setSending(false);
       setFailed(true);
@@ -55,11 +61,14 @@ const Form = () => {
       return;
     }
 
+    // Form submission in progress
     setSending(true);
     toast.loading('Submitting your message...', {
       duration: 4000,
       position: 'top-center',
-      icon: '⏳',
+      icon: '👏',
+      iconTheme: { primary: '#000', secondary: '#fff' },
+      ariaProps: { role: 'status', 'aria-live': 'polite' },
     });
 
     const data = JSON.stringify(formData);
@@ -79,15 +88,10 @@ const Form = () => {
   };
 
   const handleButtonText = () => {
-    if (sending) {
-      return <RotatingLines strokeColor="grey" strokeWidth="5" animationDuration="0.75" width="24" visible={true} />;
-    } else if (success) {
-      return "Message Sent";
-    } else if (failed || nameError || messageError || emailError || subjectError) {
-      return "Try again";
-    } else {
-      return "Send Message";
-    }
+    if (sending) return "Please wait...";
+    if (success) return "Message Sent";
+    if (failed || nameError || emailError || subjectError || messageError) return "Try again";
+    return "Send Message";
   };
 
   return (
@@ -158,7 +162,7 @@ const Form = () => {
       <motion.div className="col-12 formGroup formSubmit">
         <Button
           name={handleButtonText()}
-          disabled={nameError || messageError || emailError || subjectError || sending || success}
+          disabled={nameError || emailError || subjectError || messageError || sending || success}
         />
         <Toaster />
       </motion.div>
