@@ -5,25 +5,7 @@ import validator from "email-validator";
 import Button from "./Button";
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
-
-/**
- * 
- * Contact Form Component
- * ----------------------
- * This component represents a fully functional contact form.
- *
- * @component
- *
- * Form Submission API Key:
- * ------------------------
- * To enable form submissions, obtain your API Key from https://web3forms.com/
- *
- * Follow these steps:
- * 1. Create a .env file in the root directory.
- * 2. Copy and paste the following line into your .env file, replacing with your API key:
- *    REACT_APP_ACCESS_KEY="Your API Key"
- *
- */
+import { RotatingLines } from 'react-loader-spinner'; // Import the loader
 
 const Form = () => {
   const [ref, inView] = useInView({
@@ -31,7 +13,6 @@ const Form = () => {
     triggerOnce: true,
   });
 
-  // State for handling form submission statuses and errors
   const [success, setSuccess] = useState(false);
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -40,7 +21,6 @@ const Form = () => {
   const [subjectError, setSubjectError] = useState(false);
   const [messageError, setMessageError] = useState(false);
 
-  // State for form data
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -49,7 +29,6 @@ const Form = () => {
     access_key: process.env.REACT_APP_ACCESS_KEY,
   });
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -57,22 +36,18 @@ const Form = () => {
     });
   };
 
-  // Handle input focus to reset error state
   const handleInputFocus = (errorStateSetter) => {
     errorStateSetter(false);
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate and set error states
     setNameError(formData.name === "");
     setEmailError(formData.email === "" || !validator.validate(formData.email));
     setSubjectError(formData.subject === "");
     setMessageError(formData.message === "");
 
-    // Handle invalid form
     if (nameError || emailError || subjectError || messageError) {
       setSending(false);
       setFailed(true);
@@ -80,22 +55,11 @@ const Form = () => {
       return;
     }
 
-    // Form submission in progress
     setSending(true);
     toast.loading('Submitting your message...', {
       duration: 4000,
       position: 'top-center',
-      style: {},
-      className: '',
       icon: '⏳',
-      iconTheme: {
-        primary: '#000',
-        secondary: '#fff',
-      },
-      ariaProps: {
-        role: 'status',
-        'aria-live': 'polite',
-      },
     });
 
     const data = JSON.stringify(formData);
@@ -114,10 +78,9 @@ const Form = () => {
       });
   };
 
-  // Determine button text based on status
   const handleButtonText = () => {
     if (sending) {
-      return "Please wait...";
+      return <RotatingLines strokeColor="grey" strokeWidth="5" animationDuration="0.75" width="24" visible={true} />;
     } else if (success) {
       return "Message Sent";
     } else if (failed || nameError || messageError || emailError || subjectError) {
