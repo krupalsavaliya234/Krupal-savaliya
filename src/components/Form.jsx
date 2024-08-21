@@ -91,7 +91,7 @@ const Form = () => {
   // Button text based on form state
   const handleButtonText = () => {
     if (sending) {
-      return <RotatingLines strokeColor="grey" strokeWidth="5" animationDuration="0.75" width="24" visible={true} />;
+      return <RotatingLines strokeColor="black" strokeWidth="5" animationDuration="0.75" width="24" visible={true} />;
     } else if (success) {
       return "Message Sent";
     } else if (failed || nameError || messageError || emailError || subjectError) {
@@ -168,7 +168,7 @@ const Form = () => {
       <motion.div className="col-12 formGroup formSubmit">
         <Button
           name={handleButtonText()}
-          disabled={sending || success}
+          disabled={sending}
         />
         <Toaster />
       </motion.div>
