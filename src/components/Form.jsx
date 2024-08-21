@@ -158,7 +158,8 @@ const Form = () => {
       <motion.div className="col-12 formGroup formSubmit">
         <Button
           name={handleButtonText()}
-          disabled={nameError || messageError || emailError || subjectError || sending || success}
+          disabled={sending}
+          // disabled={nameError || messageError || emailError || subjectError || sending || success}
         />
         <Toaster />
       </motion.div>
