@@ -63,7 +63,6 @@ const Form = () => {
       toast.error('Please fill in all required fields correctly.');
       return;
     }
-else{
 
   setSending(true);
   toast.loading('Submitting your message...', {
@@ -87,7 +86,7 @@ else{
       toast.dismiss(); // Dismiss the loading toast
       toast.error('Something went wrong. Please try again later.');
     });
-  }
+  
   };
   
   const handleButtonText = () => {
