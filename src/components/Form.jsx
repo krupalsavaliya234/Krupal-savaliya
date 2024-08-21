@@ -168,7 +168,7 @@ const Form = () => {
       <motion.div className="col-12 formGroup formSubmit">
         <Button
           name={handleButtonText()}
-          disabled={sending}
+          disabled={true}
         />
         <Toaster />
       </motion.div>
