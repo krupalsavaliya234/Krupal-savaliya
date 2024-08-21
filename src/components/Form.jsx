@@ -54,16 +54,17 @@ const Form = () => {
       toast.error('Please fill in all required fields correctly.');
       return;
     }
+    else{
 
-    setSending(true);
-    toast.loading('Submitting your message...', {
-      duration: 4000,
-      position: 'top-center',
-      icon: '⏳',
-    });
-
-    const data = JSON.stringify(formData);
-    axios.post('https://myportfolio-backend-phzl.onrender.com/send-mail', { data })
+      setSending(true);
+      toast.loading('Submitting your message...', {
+        duration: 4000,
+        position: 'top-center',
+        icon: '⏳',
+      });
+      
+      const data = JSON.stringify(formData);
+      axios.post('https://myportfolio-backend-phzl.onrender.com/send-mail', { data })
       .then((response) => {
         if (response.status === 200) {
           setSending(false);
@@ -76,8 +77,9 @@ const Form = () => {
         toast.dismiss(); // Dismiss the loading toast
         toast.error('Something went wrong. Please try again later.');
       });
-  };
-
+    }
+    };
+    
   const handleButtonText = () => {
     if (sending) {
       return <RotatingLines strokeColor="grey" strokeWidth="5" animationDuration="0.75" width="24" visible={true} />;
