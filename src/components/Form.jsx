@@ -63,35 +63,36 @@ const Form = () => {
       toast.error('Please fill in all required fields correctly.');
       return;
     }
+else{
 
-    setSending(true);
-    toast.loading('Submitting your message...', {
-      duration: 4000,
-      position: 'top-center',
-      icon: '⏳',
+  setSending(true);
+  toast.loading('Submitting your message...', {
+    duration: 4000,
+    position: 'top-center',
+    icon: '⏳',
     });
 
     const data = JSON.stringify(formData);
     axios.post('https://myportfolio-backend-phzl.onrender.com/send-mail', { data })
-      .then((response) => {
-        if (response.status === 200) {
-          setSending(false);
-          setSuccess(true);
-          toast.dismiss(); // Dismiss the loading toast
-          toast.success('Thank you for connecting! Please check your email.');
-        }
-      })
-      .catch((error) => {
+    .then((response) => {
+      if (response.status === 200) {
         setSending(false);
+        setSuccess(true);
         toast.dismiss(); // Dismiss the loading toast
-        toast.error('Something went wrong. Please try again later.');
-      });
+        toast.success('Thank you for connecting! Please check your email.');
+      }
+    })
+    .catch((error) => {
+      setSending(false);
+      toast.dismiss(); // Dismiss the loading toast
+      toast.error('Something went wrong. Please try again later.');
+    });
+  }
   };
-
-  // Button text based on form state
+  
   const handleButtonText = () => {
     if (sending) {
-      return <RotatingLines strokeColor="black" strokeWidth="5" animationDuration="0.75" width="24" visible={true} />;
+      return <RotatingLines strokeColor="black" strokeWidth="6" animationDuration="0.75" width="24" visible={true} />;
     } else if (success) {
       return "Message Sent";
     } else if (failed || nameError || messageError || emailError || subjectError) {
@@ -168,7 +169,7 @@ const Form = () => {
       <motion.div className="col-12 formGroup formSubmit">
         <Button
           name={handleButtonText()}
-          disabled={true}
+          disabled={sending}
         />
         <Toaster />
       </motion.div>
