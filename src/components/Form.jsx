@@ -40,31 +40,39 @@ const Form = () => {
     errorStateSetter(false);
   };
 
+  // Combined validation logic
+  const validateForm = () => {
+    const isNameError = formData.name === "";
+    const isEmailError = formData.email === "" || !validator.validate(formData.email);
+    const isSubjectError = formData.subject === "";
+    const isMessageError = formData.message === "";
+
+    setNameError(isNameError);
+    setEmailError(isEmailError);
+    setSubjectError(isSubjectError);
+    setMessageError(isMessageError);
+
+    return !(isNameError || isEmailError || isSubjectError || isMessageError);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    setNameError(formData.name === "");
-    setEmailError(formData.email === "" || !validator.validate(formData.email));
-    setSubjectError(formData.subject === "");
-    setMessageError(formData.message === "");
-
-    if (nameError || emailError || subjectError || messageError) {
-      setSending(false);
+    if (!validateForm()) {
       setFailed(true);
       toast.error('Please fill in all required fields correctly.');
       return;
     }
-    else{
 
-      setSending(true);
-      toast.loading('Submitting your message...', {
-        duration: 4000,
-        position: 'top-center',
-        icon: '⏳',
-      });
-      
-      const data = JSON.stringify(formData);
-      axios.post('https://myportfolio-backend-phzl.onrender.com/send-mail', { data })
+    setSending(true);
+    toast.loading('Submitting your message...', {
+      duration: 4000,
+      position: 'top-center',
+      icon: '⏳',
+    });
+
+    const data = JSON.stringify(formData);
+    axios.post('https://myportfolio-backend-phzl.onrender.com/send-mail', { data })
       .then((response) => {
         if (response.status === 200) {
           setSending(false);
@@ -74,19 +82,20 @@ const Form = () => {
         }
       })
       .catch((error) => {
+        setSending(false);
         toast.dismiss(); // Dismiss the loading toast
         toast.error('Something went wrong. Please try again later.');
       });
-    }
-    };
-    
+  };
+
+  // Button text based on form state
   const handleButtonText = () => {
     if (sending) {
       return <RotatingLines strokeColor="grey" strokeWidth="5" animationDuration="0.75" width="24" visible={true} />;
     } else if (success) {
       return "Message Sent";
     } else if (failed || nameError || messageError || emailError || subjectError) {
-      return "Try again";
+      return "Try Again";
     } else {
       return "Send Message";
     }
@@ -109,7 +118,6 @@ const Form = () => {
           type="text"
           className={`formControl ${nameError ? "formError" : ""}`}
           onFocus={() => handleInputFocus(setNameError)}
-          onClick={() => handleInputFocus(setNameError)}
           onChange={handleChange}
           value={formData.name}
           id="contactName"
@@ -160,8 +168,7 @@ const Form = () => {
       <motion.div className="col-12 formGroup formSubmit">
         <Button
           name={handleButtonText()}
-          disabled={true}
-          // disabled={nameError || messageError || emailError || subjectError || sending || success}
+          disabled={sending || success}
         />
         <Toaster />
       </motion.div>
